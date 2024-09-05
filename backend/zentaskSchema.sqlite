@@ -1,0 +1,88 @@
+DROP TABLE IF EXISTS Users;
+CREATE TABLE Users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
+);
+
+INSERT INTO Users (firstname, lastname, username, email, password) VALUES
+('Alice', 'Johnson', 'alicej', 'alice.johnson@example.com', 'hashed_password_1'),
+('Bob', 'Smith', 'bobsmith', 'bob.smith@example.com', 'hashed_password_2'),
+('Charlie', 'Brown', 'charlieb', 'charlie.brown@example.com', 'hashed_password_3'),
+('Diana', 'Prince', 'dianap', 'diana.prince@example.com', 'hashed_password_4'),
+('Eve', 'Adams', 'evea', 'eve.adams@example.com', 'hashed_password_5');
+
+DROP TABLE IF EXISTS Goals;
+CREATE TABLE Goals (
+    goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    goal_type_id TEXT CHECK(goal_type_id IN ('Personal', 'Professional', 'Health')),
+    goal_status TEXT CHECK(goal_status IN ('pending', 'done')) NOT NULL,
+    task_id INTEGER,
+    FOREIGN KEY (task_id) REFERENCES Tasks(task_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS Sessions;
+CREATE TABLE Sessions (
+    session_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    duration TIME NOT NULL,
+    breaks INTEGER NOT NULL,
+    mood_id INTEGER,
+    task_id INTEGER,
+    FOREIGN KEY (mood_id) REFERENCES Moods(mood_id) ON DELETE SET NULL,
+    FOREIGN KEY (task_id) REFERENCES Tasks(task_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS Tasks;
+CREATE TABLE Tasks (
+    task_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    priority TEXT CHECK(priority IN ('urgent, important', 'not urgent, important', 'urgent, not important', 'not urgent, not important')) NOT NULL,
+    user_id INTEGER,
+    session_id INTEGER,
+    goal_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES Sessions(session_id) ON DELETE CASCADE,
+    FOREIGN KEY (goal_id) REFERENCES Goals(goal_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS Moods;
+CREATE TABLE Moods (
+    mood_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    mood_status TEXT CHECK(mood_status IN ('Happy', 'Sad', 'Cry', 'Exclaimed', 'Strong')) NOT NULL,
+    session_id INTEGER,
+    FOREIGN KEY (session_id) REFERENCES Sessions(session_id) ON DELETE CASCADE
+);
+
+INSERT INTO Tasks (title, description, priority, user_id, session_id, goal_id) VALUES
+('Finish project report', 'Complete the final report for the project.', 'urgent, important', 1, NULL, 1),
+('Attend conference', 'Participate in the annual tech conference.', 'not urgent, important', 2, NULL, 2),
+('Morning run', 'Run 5km in the morning.', 'urgent, not important', 3, NULL, 3),
+('Grocery shopping', 'Buy groceries for the week.', 'not urgent, not important', 4, NULL, 4),
+('Yoga session', 'Attend a yoga class.', 'urgent, important', 5, NULL, 5);
+
+INSERT INTO Sessions (start_time, end_time, duration, breaks, mood_id, task_id) VALUES
+('2024-08-26 08:00:00', '2024-08-26 09:00:00', '01:00:00', 1, NULL, 1),
+('2024-08-26 10:00:00', '2024-08-26 11:30:00', '01:30:00', 2, NULL, 2),
+('2024-08-26 14:00:00', '2024-08-26 15:00:00', '01:00:00', 0, 3, 3),
+('2024-08-26 16:00:00', '2024-08-26 16:45:00', '00:45:00', 1, 4, 4),
+('2024-08-26 18:00:00', '2024-08-26 19:00:00', '01:00:00', 2, NULL, 5);
+
+INSERT INTO Goals (goal_type_id, goal_status, task_id) VALUES
+('Personal', 'pending', NULL),
+('Professional', 'done', NULL),
+('Health', 'pending', NULL),
+('Personal', 'done', NULL),
+('Health', 'pending', NULL);
+
+INSERT INTO Moods (mood_status, session_id) VALUES
+('Happy', 1),
+('Sad', 2),
+('Exclaimed', 3),
+('Strong', 4),
+('Cry', 5);
