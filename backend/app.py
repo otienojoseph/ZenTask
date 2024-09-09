@@ -15,8 +15,6 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
-import routes
-
 with app.app_context():
     db.create_all()
 
