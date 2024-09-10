@@ -1,20 +1,22 @@
 from typing import Literal
-from sqlalchemy import DATETIME, TIME, ForeignKey, String, Integer
-import sqlalchemy
+from sqlalchemy import DATETIME, TIME, ForeignKey, String, Integer, Enum
+import sqlalchemy.types
 from sqlalchemy.orm import Mapped, mapped_column
 from app import db
 
+# Enums for specific field types
 PRIORITY = Literal["urgent, important", "not urgent, important", "urgent, not important", "not urgent, not important"]
 MOOD = Literal["Motivated", "Tired", "Struggling"]
 GOAL_TYPE = Literal["Personal", "Professional", "Health"]
 GOAL_STATUS = Literal["pending", "done"]
 
 class Users(db.Model):
-    user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    __tablename__ = 'users'
+    user_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     first_name: Mapped[str] = mapped_column(String(20), nullable=False)
     last_name: Mapped[str] = mapped_column(String(20), nullable=False)
     username: Mapped[str] = mapped_column(String(20), nullable=False)
-    email: Mapped[str] = mapped_column(nullable=False, unique=True)
+    email: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)  # Explicit String length
 
     def to_json(self):
         return {
@@ -25,13 +27,14 @@ class Users(db.Model):
             "email": self.email
         }
 
-
 class Tasks(db.Model):
-    task_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    __tablename__ = 'tasks'
+    task_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(30), nullable=False)
     description: Mapped[str] = mapped_column(String(255), nullable=True)
     priority: Mapped[PRIORITY] = mapped_column(
-        sqlalchemy.Enum("urgent, important", "not urgent, important", "urgent, not important", "not urgent, not important", name="priority"), nullable=False
+        Enum("urgent, important", "not urgent, important", "urgent, not important", "not urgent, not important", name="priority"), 
+        nullable=False
     )
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.user_id"), nullable=False)
     session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"), nullable=False)
@@ -45,13 +48,13 @@ class Tasks(db.Model):
             "priority": self.priority
         }
 
-
 class Sessions(db.Model):
-    session_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    start_time: Mapped[DATETIME] = mapped_column(DATETIME, nullable=False)
-    end_time: Mapped[DATETIME] = mapped_column(DATETIME, nullable=False)
-    duration: Mapped[TIME] = mapped_column(TIME, nullable=False)
-    breaks: Mapped[int] = mapped_column(nullable=False)
+    __tablename__ = 'sessions'
+    session_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    start_time: Mapped[sqlalchemy.types.DATETIME] = mapped_column(DATETIME, nullable=False)
+    end_time: Mapped[sqlalchemy.types.DATETIME] = mapped_column(DATETIME, nullable=False)
+    duration: Mapped[sqlalchemy.types.TIME] = mapped_column(TIME, nullable=False)
+    breaks: Mapped[int] = mapped_column(Integer, nullable=False)
     task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"), nullable=False)
     mood_id: Mapped[int] = mapped_column(Integer, ForeignKey("moods.mood_id"), nullable=False)
 
@@ -64,11 +67,11 @@ class Sessions(db.Model):
             "breaks": self.breaks
         }
 
-
 class Moods(db.Model):
-    mood_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    __tablename__ = 'moods'
+    mood_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     mood_status: Mapped[MOOD] = mapped_column(
-        sqlalchemy.Enum("Motivated", "Tired", "Struggling", name="mood_status")
+        Enum("Motivated", "Tired", "Struggling", name="mood_status")
     )
     session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"), nullable=False)
 
@@ -78,14 +81,14 @@ class Moods(db.Model):
             "mood_status": self.mood_status
         }
 
-
 class Goals(db.Model):
-    goal_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    __tablename__ = 'goals'
+    goal_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     goal_type: Mapped[GOAL_TYPE] = mapped_column(
-        sqlalchemy.Enum("Personal", "Professional", "Health", name="goal_type")
+        Enum("Personal", "Professional", "Health", name="goal_type")
     )
     goal_status: Mapped[GOAL_STATUS] = mapped_column(
-        sqlalchemy.Enum("pending", "done", name="goal_status")
+        Enum("pending", "done", name="goal_status")
     )
     task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"), nullable=False)
 
@@ -95,4 +98,3 @@ class Goals(db.Model):
             "goal_type": self.goal_type,
             "goal_status": self.goal_status
         }
-
