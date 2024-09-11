@@ -7,6 +7,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+  <header>	  
     <div>
     <div class="logo">
       <a href="#">Zen it!</a>
@@ -63,12 +64,12 @@ function App() {
         <input type="range" min="0" max="100" value="50">
       </div>
     </div>
-  </main>
 
-  <footer>
-    <p>Motivational Quote - The finishing is more important than the beginning</p>
-  </footer>
-    </div>
+  <div>
+    <footer>
+      <p>Motivational Quote - The finishing is more important than the beginning</p>
+    </footer>
+  </div>
   )
 }
 
