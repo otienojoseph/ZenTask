@@ -1,6 +1,7 @@
 from typing import Literal
-from sqlalchemy import DATETIME, TIME, ForeignKey, String, Integer, Enum
-import sqlalchemy
+from datetime import datetime, timedelta
+from sqlalchemy import DateTime, ForeignKey, String, Integer, Enum
+import sqlalchemy.types
 from sqlalchemy.orm import Mapped, mapped_column
 from app import db
 
@@ -51,14 +52,10 @@ class Tasks(db.Model):
         ),
         nullable=False,
     )
-    user_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("users.user_id"), nullable=False
-    )
-    session_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("sessions.session_id"), nullable=False
-    )
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.user_id"))
+    session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
     goal_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("goals.goal_id"), nullable=False
+        Integer, ForeignKey("goals.goal_id"), nullable=True
     )
 
     def to_json(self):
@@ -75,20 +72,17 @@ class Sessions(db.Model):
     session_id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
-    start_time: Mapped[sqlalchemy.types.DATETIME] = mapped_column(
-        DATETIME, nullable=False
-    )
-    end_time: Mapped[sqlalchemy.types.DATETIME] = mapped_column(
-        DATETIME, nullable=False
-    )
-    duration: Mapped[sqlalchemy.types.TIME] = mapped_column(TIME, nullable=False)
+    start_time: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
+    end_time: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
+    duration: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
     breaks: Mapped[int] = mapped_column(Integer, nullable=False)
-    task_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("tasks.task_id"), nullable=False
-    )
-    mood_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("moods.mood_id"), nullable=False
-    )
+    task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"))
+    mood_id: Mapped[int] = mapped_column(Integer, ForeignKey("moods.mood_id"))
+
+    def set_duration(self):
+        if self.start_time and self.end_time:
+            delta = self.end_time - self.start_time
+            self.duration = (datetime.min + delta).time()
 
     def to_json(self):
         return {
@@ -106,9 +100,7 @@ class Moods(db.Model):
     mood_status: Mapped[MOOD] = mapped_column(
         Enum("Motivated", "Tired", "Struggling", name="mood_status")
     )
-    session_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("sessions.session_id"), nullable=False
-    )
+    session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
 
     def to_json(self):
         return {"mood_id": self.mood_id, "mood_status": self.mood_status}
@@ -123,9 +115,7 @@ class Goals(db.Model):
     goal_status: Mapped[GOAL_STATUS] = mapped_column(
         Enum("pending", "done", name="goal_status")
     )
-    task_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("tasks.task_id"), nullable=False
-    )
+    task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"))
 
     def to_json(self):
         return {
