@@ -6,7 +6,7 @@ from models import Users, Tasks, Sessions, Goals, Moods
 # Users routes
 @app.route("/api/users", methods=["GET"])
 def user_list():
-    users = Users.query.all()
+    users = db.session.execute(db.select(Users).order_by(Users.username)).scalars()
     result = [user.to_json() for user in users]
     return jsonify(result), 200
 
@@ -42,7 +42,7 @@ def user_create():
 @app.route("/api/users/<int:id>", methods=["GET"])
 def user_detail(id):
     try:
-        user = Users.query.get(id)
+        user = db.session.execute(db.select(Users).where(Users.user_id == id)).scalar()
         if user is None:
             return jsonify({"error": "User not found"}), 404
 
@@ -55,7 +55,7 @@ def user_detail(id):
 @app.route("/api/users/<int:id>", methods=["DELETE"])
 def user_delete(id):
     try:
-        user = Users.query.get(id)
+        user = db.session.execute(db.select(Users).where(Users.user_id == id)).scalar()
         if user is None:
             return jsonify({"error": "User not found"}), 404
 
@@ -71,7 +71,7 @@ def user_delete(id):
 @app.route("/api/users/<int:id>", methods=["PATCH"])
 def user_update(id):
     try:
-        user = Users.query.get(id)
+        user = db.session.execute(db.select(Users).where(Users.user_id == id)).scalar()
         if user is None:
             return jsonify({"error": "User not found"}), 404
 
@@ -92,7 +92,7 @@ def user_update(id):
 # Tasks routes
 @app.route("/api/tasks", methods=["GET"])
 def tasks_list():
-    tasks = Tasks.query.all()
+    tasks = db.session.execute(db.select(Tasks).order_by(Tasks.task_id)).scalars()
     result = [task.to_json() for task in tasks]
     return jsonify(result), 200
 
@@ -135,7 +135,7 @@ def task_create():
 @app.route("/api/tasks/<int:id>", methods=["GET"])
 def task_detail(id):
     try:
-        task = Tasks.query.get(id)
+        task = db.session.execute(db.select(Tasks).where(Tasks.task_id == id)).scalar()
         if task is None:
             return jsonify({"error": "Task not found"}), 404
 
@@ -148,7 +148,7 @@ def task_detail(id):
 @app.route("/api/tasks/<int:id>", methods=["DELETE"])
 def task_delete(id):
     try:
-        task = Tasks.query.get(id)
+        task = db.session.execute(db.select(Tasks).where(Tasks.task_id == id)).scalar()
         if task is None:
             return jsonify({"error": "Task not found"}), 404
 
@@ -164,7 +164,7 @@ def task_delete(id):
 @app.route("/api/tasks/<int:id>", methods=["PATCH"])
 def task_update(id):
     try:
-        task = Tasks.query.get(id)
+        task = db.session.execute(db.select(Tasks).where(Tasks.task_id == id)).scalar()
         if task is None:
             return jsonify({"error": "Task not found"}), 404
 
@@ -187,7 +187,9 @@ def task_update(id):
 # Sessions routes
 @app.route("/api/sessions", methods=["GET"])
 def session_list():
-    sessions = Sessions.query.all()
+    sessions = db.session.execute(
+        db.select(Sessions).order_by(Sessions.session_id)
+    ).scalars()
     result = [session.to_json() for session in sessions]
     return jsonify(result), 200
 
@@ -235,7 +237,9 @@ def session_create():
 @app.route("/api/sessions/<int:id>", methods=["GET"])
 def session_detail(id):
     try:
-        session = Sessions.query.get(id)
+        session = db.session.execute(
+            db.select(Sessions).where(Sessions.session_id == id)
+        ).scalar()
         if session is None:
             return jsonify({"error": "Session not found"}), 404
 
@@ -248,7 +252,9 @@ def session_detail(id):
 @app.route("/api/sessions/<int:id>", methods=["DELETE"])
 def session_delete(id):
     try:
-        session = Sessions.query.get(id)
+        session = db.session.execute(
+            db.select(Sessions).where(Sessions.session_id == id)
+        ).scalar()
         if session is None:
             return jsonify({"error": "Session not found"}), 404
 
@@ -264,7 +270,9 @@ def session_delete(id):
 @app.route("/api/sessions/<int:id>", methods=["PATCH"])
 def session_update(id):
     try:
-        session = Sessions.query.get(id)
+        session = db.session.execute(
+            db.select(Sessions).where(Sessions.session_id == id)
+        ).scalar()
         if session is None:
             return jsonify({"error": "Session not found"}), 404
 
@@ -286,7 +294,7 @@ def session_update(id):
 # Goals routes
 @app.route("/api/goals", methods=["GET"])
 def goal_list():
-    goals = Goals.query.all()
+    goals = db.session.execute(db.select(Goals).order_by(Goals.goal_id)).scalars()
     result = [goal.to_json() for goal in goals]
     return jsonify(result), 200
 
@@ -319,7 +327,7 @@ def goal_create():
 @app.route("/api/goals/<int:id>", methods=["GET"])
 def goal_detail(id):
     try:
-        goal = Goals.query.get(id)
+        goal = db.session.execute(db.select(Goals).where(Goals.goal_id == id)).scalar()
         if goal is None:
             return jsonify({"error": "Goal not found"}), 404
 
@@ -332,7 +340,7 @@ def goal_detail(id):
 @app.route("/api/goals/<int:id>", methods=["DELETE"])
 def goal_delete(id):
     try:
-        goal = Goals.query.get(id)
+        goal = db.session.execute(db.select(Goals).where(Goals.goal_id == id)).scalar()
         if goal is None:
             return jsonify({"error": "Goal not found"}), 404
 
@@ -348,7 +356,7 @@ def goal_delete(id):
 @app.route("/api/goals/<int:id>", methods=["PATCH"])
 def goal_update(id):
     try:
-        goal = Goals.query.get(id)
+        goal = db.session.execute(db.select(Goals).where(Goals.goal_id == id)).scalar()
         if goal is None:
             return jsonify({"error": "Goal not found"}), 404
 
@@ -367,7 +375,7 @@ def goal_update(id):
 # Moods routes
 @app.route("/api/moods", methods=["GET"])
 def mood_list():
-    moods = Moods.query.all()
+    moods = db.session.execute(db.select(Moods).order_by(Moods.mood_id)).scalars()
     result = [mood.to_json() for mood in moods]
     return jsonify(result), 200
 
@@ -399,7 +407,7 @@ def mood_create():
 @app.route("/api/moods/<int:id>", methods=["GET"])
 def mood_detail(id):
     try:
-        mood = Moods.query.get(id)
+        mood = db.session.execute(db.select(Moods).where(Moods.mood_id == id)).scalar()
         if mood is None:
             return jsonify({"error": "Mood not found"}), 404
 
@@ -412,7 +420,7 @@ def mood_detail(id):
 @app.route("/api/moods/<int:id>", methods=["DELETE"])
 def mood_delete(id):
     try:
-        mood = Moods.query.get(id)
+        mood = db.session.execute(db.select(Moods).where(Moods.mood_id == id)).scalar()
         if mood is None:
             return jsonify({"error": "Mood not found"}), 404
 
@@ -428,7 +436,7 @@ def mood_delete(id):
 @app.route("/api/moods/<int:id>", methods=["PATCH"])
 def mood_update(id):
     try:
-        mood = Moods.query.get(id)
+        mood = db.session.execute(db.select(Moods).where(Moods.mood_id == id)).scalar()
         if mood is None:
             return jsonify({"error": "Mood not found"}), 404
 
