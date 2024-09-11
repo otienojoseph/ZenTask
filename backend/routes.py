@@ -237,7 +237,7 @@ def session_detail(id):
     try:
         session = Sessions.query.get(id)
         if session is None:
-            return jsonify({"error": "Task not found"}), 404
+            return jsonify({"error": "Session not found"}), 404
 
         return jsonify(session.to_json()), 200
 
@@ -250,12 +250,12 @@ def session_delete(id):
     try:
         session = Sessions.query.get(id)
         if session is None:
-            return jsonify({"error": "Task not found"}), 404
+            return jsonify({"error": "Session not found"}), 404
 
         db.session.delete(session)
         db.session.commit()
 
-        return jsonify({"msg": "Task deleted"}), 200
+        return jsonify({"msg": "Session deleted"}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
@@ -266,7 +266,7 @@ def session_update(id):
     try:
         session = Sessions.query.get(id)
         if session is None:
-            return jsonify({"error": "Task not found"}), 404
+            return jsonify({"error": "Session not found"}), 404
 
         data = request.json
 
@@ -278,6 +278,167 @@ def session_update(id):
 
         db.session.commit()
         return jsonify(session.to_json()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+# Goals routes
+@app.route("/api/goals", methods=["GET"])
+def goal_list():
+    goals = Goals.query.all()
+    result = [goal.to_json() for goal in goals]
+    return jsonify(result), 200
+
+
+@app.route("/api/goals/create", methods=["POST"])
+def goal_create():
+    try:
+        data = request.json
+
+        required_fields = ["goal_type", "goal_status", "task_id"]
+
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing field {field}"}), 400
+
+        goal_type = data.get("goal_type")
+        goal_status = data.get("goal_status")
+        task_id = data.get("task_id")
+
+        new_goal = Goals(goal_type=goal_type, goal_status=goal_status, task_id=task_id)
+
+        db.session.add(new_goal)
+        db.session.commit()
+        return jsonify(new_goal.to_json()), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/goals/<int:id>", methods=["GET"])
+def goal_detail(id):
+    try:
+        goal = Goals.query.get(id)
+        if goal is None:
+            return jsonify({"error": "Goal not found"}), 404
+
+        return jsonify(goal.to_json()), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/goals/<int:id>", methods=["DELETE"])
+def goal_delete(id):
+    try:
+        goal = Goals.query.get(id)
+        if goal is None:
+            return jsonify({"error": "Goal not found"}), 404
+
+        db.session.delete(goal)
+        db.session.commit()
+
+        return jsonify({"msg": "Goal deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/goals/<int:id>", methods=["PATCH"])
+def goal_update(id):
+    try:
+        goal = Goals.query.get(id)
+        if goal is None:
+            return jsonify({"error": "Goal not found"}), 404
+
+        data = request.json
+
+        goal.goal_type = data.get("goal_type")
+        goal.goal_status = data.get("goal_status")
+
+        db.session.commit()
+        return jsonify(goal.to_json()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+# Moods routes
+@app.route("/api/moods", methods=["GET"])
+def mood_list():
+    moods = Moods.query.all()
+    result = [mood.to_json() for mood in moods]
+    return jsonify(result), 200
+
+
+@app.route("/api/moods/create", methods=["POST"])
+def mood_create():
+    try:
+        data = request.json
+
+        required_fields = ["mood_status", "session_id"]
+
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing field {field}"}), 400
+
+        mood_status = data.get("mood_status")
+        session_id = data.get("session_id")
+
+        new_mood = Moods(mood_status=mood_status, session_id=session_id)
+
+        db.session.add(new_mood)
+        db.session.commit()
+        return jsonify(new_mood.to_json()), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/moods/<int:id>", methods=["GET"])
+def mood_detail(id):
+    try:
+        mood = Moods.query.get(id)
+        if mood is None:
+            return jsonify({"error": "Mood not found"}), 404
+
+        return jsonify(mood.to_json()), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/moods/<int:id>", methods=["DELETE"])
+def mood_delete(id):
+    try:
+        mood = Moods.query.get(id)
+        if mood is None:
+            return jsonify({"error": "Mood not found"}), 404
+
+        db.session.delete(mood)
+        db.session.commit()
+
+        return jsonify({"msg": "Mood deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/moods/<int:id>", methods=["PATCH"])
+def mood_update(id):
+    try:
+        mood = Moods.query.get(id)
+        if mood is None:
+            return jsonify({"error": "Mood not found"}), 404
+
+        data = request.json
+
+        mood.mood_status = data.get("mood_status")
+        mood.session_id = data.get("session_id")
+
+        db.session.commit()
+        return jsonify(mood.to_json()), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
