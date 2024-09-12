@@ -81,13 +81,10 @@ def user_update(id):
             return jsonify({"error": "User not found"}), 404
 
         data = request.json
-        print(f"### Request body: {data}")
 
-        user.first_name = data.get("first_name")
-        user.last_name = data.get("last_name")
-        user.username = data.get("username")
-        user.email = data.get("email")
-        user.password = data.get("password")
+        for key, value in data.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
 
         db.session.commit()
         return jsonify(user.to_json()), 200
@@ -177,12 +174,9 @@ def task_update(id):
 
         data = request.json
 
-        task.title = data.get("title")
-        task.description = data.get("description")
-        task.priority = data.get("priority")
-        task.user_id = data.get("user_id")
-        task.session_id = data.get("session_id")
-        task.goal_id = data.get("goal_id")
+        for key, value in data.items():
+            if hasattr(task, key):
+                setattr(task, key, value)
 
         db.session.commit()
         return jsonify(task.to_json()), 200
@@ -285,13 +279,12 @@ def session_update(id):
 
         data = request.json
 
-        session.start_time = data.get("start_time")
-        session.end_time = data.get("end_time")
-        session.duration = data.get("breaks")
-        session.task_id = data.get("task_id")
-        session.mood_id = data.get("mood_id")
+        for key, value in data.items():
+            if hasattr(session, key):
+                setattr(session, key, value)
 
         db.session.commit()
+
         return jsonify(session.to_json()), 200
     except Exception as e:
         db.session.rollback()
@@ -369,8 +362,9 @@ def goal_update(id):
 
         data = request.json
 
-        goal.goal_type = data.get("goal_type")
-        goal.goal_status = data.get("goal_status")
+        for key, value in data.items():
+            if hasattr(goal, key):
+                setattr(goal, key, value)
 
         db.session.commit()
         return jsonify(goal.to_json()), 200
@@ -449,8 +443,9 @@ def mood_update(id):
 
         data = request.json
 
-        mood.mood_status = data.get("mood_status")
-        mood.session_id = data.get("session_id")
+        for key, value in data.items():
+            if hasattr(mood, key):
+                setattr(mood, key, value)
 
         db.session.commit()
         return jsonify(mood.to_json()), 200

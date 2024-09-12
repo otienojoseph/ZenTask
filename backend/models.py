@@ -21,13 +21,9 @@ class Users(db.Model):
     user_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     first_name: Mapped[str] = mapped_column(String(20))
     last_name: Mapped[str] = mapped_column(String(20))
-    username: Mapped[str] = mapped_column(String(20), unique=True)
-    email: Mapped[str] = mapped_column(String(50), unique=True)
-    password: Mapped[str] = mapped_column(unique=True)
-
-    # relationships
-    tasks = db.relationship("Tasks", backref="user", lazy=True)
-    goals = db.relationship("Goals", backref="user", lazy=True)
+    username: Mapped[str] = mapped_column(String(20))
+    email: Mapped[str] = mapped_column(String(50))
+    password: Mapped[str] = mapped_column(String(20))
 
     def to_json(self):
         return {
@@ -53,16 +49,17 @@ class Tasks(db.Model):
             "not urgent, not important",
             name="priority",
         ),
-        nullable=False,
+        nullable=True,
     )
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.user_id"), nullable=False
     )
-    session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
-    goal_id: Mapped[int] = mapped_column(Integer, ForeignKey("goals.goal_id"))
-
-    # relationship
-    sessions = db.relationship("Sessions", backref="task", lazy=True)
+    session_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("sessions.session_id", ondelete="CASCADE"), nullable=True
+    )
+    goal_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("goals.goal_id", ondelete="CASCADE"), nullable=True
+    )
 
     def to_json(self):
         return {
@@ -82,11 +79,12 @@ class Sessions(db.Model):
     end_time: Mapped[DateTime] = mapped_column(DateTime)
     duration: Mapped[DateTime] = mapped_column(Time)
     breaks: Mapped[int] = mapped_column(Integer, default=0)
-    task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"))
-    mood_id: Mapped[int] = mapped_column(Integer, ForeignKey("moods.mood_id"))
-
-    # relationship
-    mood = db.relationship("Moods", backref="session")
+    task_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("tasks.task_id", ondelete="CASCADE"), nullable=True
+    )
+    mood_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("moods.mood_id", ondelete="CASCADE"), nullable=True
+    )
 
     def set_duration(self):
         if self.start_time and self.end_time:
@@ -115,8 +113,7 @@ class Moods(db.Model):
             "stressed",
             "relaxed",
             name="mood_status",
-        ),
-        nullable=False,
+        )
     )
     session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
 
@@ -131,8 +128,7 @@ class Goals(db.Model):
         Enum("personal", "professional", "health", name="goal_type")
     )
     goal_status: Mapped[GOAL_STATUS] = mapped_column(
-        Enum("pending", "in progress", "done", name="goal_status"),
-        default="pending",
+        Enum("pending", "in progress", "done", name="goal_status"), default="pending"
     )
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.user_id"))
     task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"))
