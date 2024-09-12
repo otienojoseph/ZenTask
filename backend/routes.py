@@ -26,9 +26,14 @@ def user_create():
         last_name = data.get("last_name")
         username = data.get("username")
         email = data.get("email")
+        password = data.get("password")
 
         new_user = Users(
-            first_name=first_name, last_name=last_name, username=username, email=email
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            email=email,
+            password=password,
         )
 
         db.session.add(new_user)
@@ -76,11 +81,13 @@ def user_update(id):
             return jsonify({"error": "User not found"}), 404
 
         data = request.json
+        print(f"### Request body: {data}")
 
-        user.first_name = data.get("first_name", user.first_name)
-        user.last_name = data.get("last_name", user.last_name)
-        user.username = data.get("username", user.username)
-        user.email = data.get("email", user.email)
+        user.first_name = data.get("first_name")
+        user.last_name = data.get("last_name")
+        user.username = data.get("username")
+        user.email = data.get("email")
+        user.password = data.get("password")
 
         db.session.commit()
         return jsonify(user.to_json()), 200

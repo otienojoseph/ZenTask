@@ -1,7 +1,6 @@
 from typing import Literal
 from datetime import datetime, timedelta
-from sqlalchemy import DateTime, ForeignKey, String, Integer, Enum
-import sqlalchemy.types
+from sqlalchemy import DateTime, Time, ForeignKey, String, Integer, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from app import db
 
@@ -20,12 +19,15 @@ GOAL_STATUS = Literal["pending", "done"]
 class Users(db.Model):
     __tablename__ = "users"
     user_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    first_name: Mapped[str] = mapped_column(String(20), nullable=False)
-    last_name: Mapped[str] = mapped_column(String(20), nullable=False)
-    username: Mapped[str] = mapped_column(String(20), nullable=False)
-    email: Mapped[str] = mapped_column(
-        String(50), nullable=False, unique=True
-    )  # Explicit String length
+    first_name: Mapped[str] = mapped_column(String(20))
+    last_name: Mapped[str] = mapped_column(String(20))
+    username: Mapped[str] = mapped_column(String(20), unique=True)
+    email: Mapped[str] = mapped_column(String(50), unique=True)
+    password: Mapped[str] = mapped_column(unique=True)
+
+    # relationships
+    tasks = db.relationship("Tasks", backref="user", lazy=True)
+    goals = db.relationship("Goals", backref="user", lazy=True)
 
     def to_json(self):
         return {
@@ -34,14 +36,15 @@ class Users(db.Model):
             "last_name": self.last_name,
             "username": self.username,
             "email": self.email,
+            "password": self.password,
         }
 
 
 class Tasks(db.Model):
     __tablename__ = "tasks"
     task_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String(30), nullable=False)
-    description: Mapped[str] = mapped_column(String(255), nullable=True)
+    title: Mapped[str] = mapped_column(String(30))
+    description: Mapped[str] = mapped_column(String(255))
     priority: Mapped[PRIORITY] = mapped_column(
         Enum(
             "urgent, important",
@@ -52,11 +55,14 @@ class Tasks(db.Model):
         ),
         nullable=False,
     )
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.user_id"))
-    session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
-    goal_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("goals.goal_id"), nullable=True
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.user_id"), nullable=False
     )
+    session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
+    goal_id: Mapped[int] = mapped_column(Integer, ForeignKey("goals.goal_id"))
+
+    # relationship
+    sessions = db.relationship("Sessions", backref="task", lazy=True)
 
     def to_json(self):
         return {
@@ -72,12 +78,15 @@ class Sessions(db.Model):
     session_id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
-    start_time: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    end_time: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    duration: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    breaks: Mapped[int] = mapped_column(Integer, nullable=False)
+    start_time: Mapped[DateTime] = mapped_column(DateTime, default=datetime.utcnow)
+    end_time: Mapped[DateTime] = mapped_column(DateTime)
+    duration: Mapped[DateTime] = mapped_column(Time)
+    breaks: Mapped[int] = mapped_column(Integer, default=0)
     task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"))
     mood_id: Mapped[int] = mapped_column(Integer, ForeignKey("moods.mood_id"))
+
+    # relationship
+    mood = db.relationship("Moods", backref="session")
 
     def set_duration(self):
         if self.start_time and self.end_time:
@@ -98,7 +107,16 @@ class Moods(db.Model):
     __tablename__ = "moods"
     mood_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     mood_status: Mapped[MOOD] = mapped_column(
-        Enum("Motivated", "Tired", "Struggling", name="mood_status")
+        Enum(
+            "happy",
+            "sad",
+            "neutral",
+            "excited",
+            "stressed",
+            "relaxed",
+            name="mood_status",
+        ),
+        nullable=False,
     )
     session_id: Mapped[int] = mapped_column(Integer, ForeignKey("sessions.session_id"))
 
@@ -110,11 +128,13 @@ class Goals(db.Model):
     __tablename__ = "goals"
     goal_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     goal_type: Mapped[GOAL_TYPE] = mapped_column(
-        Enum("Personal", "Professional", "Health", name="goal_type")
+        Enum("personal", "professional", "health", name="goal_type")
     )
     goal_status: Mapped[GOAL_STATUS] = mapped_column(
-        Enum("pending", "done", name="goal_status")
+        Enum("pending", "in progress", "done", name="goal_status"),
+        default="pending",
     )
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.user_id"))
     task_id: Mapped[int] = mapped_column(Integer, ForeignKey("tasks.task_id"))
 
     def to_json(self):
