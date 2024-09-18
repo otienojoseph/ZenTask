@@ -6,8 +6,6 @@ import { assets } from '../../assets/assets'
 function Navbar({setShowLogin}) {
     const [menu, setMenu] = useState("home");
 
-    const {getTotalCartAmount} = useContext(StoreContext);
-
     const location = useLocation();
     const isHome = location.pathname === '/';
 
