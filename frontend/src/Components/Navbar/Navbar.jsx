@@ -23,7 +23,7 @@ function Navbar({setShowLogin}) {
         <a href='#footer' onClick={()=>setMenu("contact-us")} className={menu==="contact-us"?"active":""}>contact us</a>
       </ul>
       <div className="navbar-right">
-        <img src={assets.} alt="" />
+        <img src={assets.search_icon} alt="" />
   
         <button onClick={()=>setShowLogin(true)}>sign in</button>
       </div>
