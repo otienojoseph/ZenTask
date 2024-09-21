@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Header from '../Components/Header/Header'
-import ExploreMenu from '../Components/ExploreMenu/ExploreMenu'
 import AppDownload from '../Components/AppDownload/AppDownload'
 import Footer from '../Components/Footer/Footer'
 function Home() {

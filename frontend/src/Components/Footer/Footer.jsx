@@ -1,17 +1,18 @@
 import React from 'react'
 import { assets } from '../../assets/assets'
+import { Image } from '@chakra-ui/react'
 
 function Footer() {
   return (
     <div className='footer' id='footer'>
       <div className="footer-content">
         <div className="footer-content-left">
-            <img src={assets.logo} alt="" />
+            <Image src={assets.logo} alt="" />
             <p>At ZenTask, we believe that everything and anything is possible with the right mindset, attitude and timemanagement. You can literally Zen through it!</p>
             <div className="footer-social-icons">
-                <img src={assets.facebook_icon} alt="" />
-                <img src={assets.x_icon} alt="" />
-                <img src={assets.linkedin_icon} alt="" />
+                <Image src={assets.facebook_icon} alt="" />
+                <Image src={assets.x_icon} alt="" />
+                <Image src={assets.linkedin_icon} alt="" />
             </div>
         </div>
         <div className="footer-content-center">
