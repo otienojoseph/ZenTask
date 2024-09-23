@@ -98,24 +98,26 @@
 
 // export default App;
 
-import React, {useState} from 'react'
+import {useState} from 'react'
 import Navbar from './Components/Navbar/Navbar'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import Home from './Home/Home'
 import Footer from './Components/Footer/Footer'
 import LoginPopup from './Components/LoginPopup/LoginPopup'
 
 function App() {
 
-  const [ShowLogin, setShowLogin] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
   return (
     <>
-    {ShowLogin? <LoginPopup setShowLogin={setShowLogin} />:<></>}
+    {showLogin? <LoginPopup setShowLogin={setShowLogin} />:<></>}
     <div className='app'>
-      <Navbar setShowLogin={setShowLogin}/>
-      <Routes>
-        <Route path='/' element={<Home />} />
-      </Routes>
+      <Navbar setShowLogin={setShowLogin} />
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Home />} />
+        </Routes> 
+      </BrowserRouter>
     </div>
     <Footer />
     </>

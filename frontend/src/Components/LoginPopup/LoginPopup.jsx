@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import { assets } from '../../assets/assets'
+import './LoginPopup.css'
+import { Image } from '@chakra-ui/react'
 
 function LoginPopup({setShowLogin}) {
 
@@ -17,10 +19,10 @@ function LoginPopup({setShowLogin}) {
                 <input type="password" placeholder='Your password' required />
                 <input type="password" placeholder='Confirm password' required />
             </div>
-            <button>{currentState==='Sign Up'?"Create account":'Login'}</button>
+            <button>{currentState==='Sign Up'?"Sign up":'Login'}</button>
             <div className="login-popup-condition">
                 <input type="checkbox" required />
-                <p>By continuing, i agree to the terms of use & privacy policy.</p>
+                <p>By continuing, I agree to the terms of use & privacy policy.</p>
             </div>
             {currentState==='Login'?<p>Create a new account? <span onClick={()=>setCurrentState('Sign Up')}>Click here</span></p>:
             <p>Already have an account? <span onClick={()=>setCurrentState('Login')}>Login here</span></p>}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { assets } from '../../assets/assets'
+import './Footer.css'
 import { Image } from '@chakra-ui/react'
 
 function Footer() {
@@ -8,7 +9,7 @@ function Footer() {
       <div className="footer-content">
         <div className="footer-content-left">
             <Image src={assets.logo} alt="" />
-            <p>At ZenTask, we believe that everything and anything is possible with the right mindset, attitude and timemanagement. You can literally Zen through it!</p>
+            <p>At ZenTask, we believe that everything and anything is possible with the right mindset, attitude and time management. You can literally Zen through it!</p>
             <div className="footer-social-icons">
                 <Image src={assets.facebook_icon} alt="" />
                 <Image src={assets.x_icon} alt="" />
