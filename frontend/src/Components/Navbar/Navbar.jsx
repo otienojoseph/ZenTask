@@ -18,7 +18,6 @@ function Navbar({setShowLogin}) {
       <a href='#home'><img src={assets.logo} alt="" className='logo' /></a>
       <ul className="navbar-menu">
         <a href='#home' onClick={()=>setMenu("home")} className={menu==="home"?"active":""}>Home</a>
-        
         <a href='#app-download' onClick={()=>setMenu("Mobile-App")} className={menu==="Mobile-App"?"active":""}>Mobile-App</a>
         <a href='#footer' onClick={()=>setMenu("contact-us")} className={menu==="contact-us"?"active":""}>Contact Us</a>
       </ul>
