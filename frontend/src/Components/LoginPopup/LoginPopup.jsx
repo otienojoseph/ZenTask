@@ -5,7 +5,7 @@ import "./LoginPopup.css";
 function LoginPopup({ setShowLogin }) {
 	const [currentState, setCurrentState] = useState("Login");
 	return (
-		<div className="login-popup" onClick={() => setShowLogin((prev) => !prev)}>
+		<div className="login-popup">
 			<form className="login-popup-container">
 				<div className="login-popup-title">
 					<h2>{currentState}</h2>
