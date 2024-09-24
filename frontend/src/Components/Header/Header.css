@@ -6,6 +6,7 @@
 	background-size: cover;
 	background-position: center;
 	background-attachment: fixed;
+    border-bottom-right-radius: 5%;
 	overflow: hidden;
 	position: relative;
 	display: flex;

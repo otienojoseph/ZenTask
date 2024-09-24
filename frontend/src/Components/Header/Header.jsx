@@ -2,7 +2,7 @@ import "./Header.css";
 
 function Header() {
 	return (
-		<div className="header">
+		<div className="header" id="header">
 			<div className="header-contents">
 				<h2>Enhance Productivity, Embrace Serenity...</h2>
 				<p>
