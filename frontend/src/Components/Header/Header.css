@@ -17,6 +17,7 @@
 	align-items: flex-start;
 	justify-content: flex-start;
 	max-width: 50%;
+	padding-left: 10px;
 }
 
 .header-contents h2 {
