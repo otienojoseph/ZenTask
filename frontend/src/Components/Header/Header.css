@@ -2,7 +2,7 @@
 	height: calc(800px - 110px);
 	margin-top: 90px;
 	width: 100%;
-	background: url("../../../public/header_img.png") no-repeat;
+	background: url("../../assets/header_img.png") no-repeat;
 	background-size: cover;
 	background-position: center;
 	background-attachment: fixed;
