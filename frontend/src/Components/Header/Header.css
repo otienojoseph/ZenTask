@@ -1,10 +1,15 @@
 .header {
-	height: 700px;
+	height: calc(800px - 110px);
+	margin-top: 90px;
 	width: 100%;
 	background: url("../../../public/header_img.png") no-repeat;
 	background-size: cover;
-	/* TODO: Fix the margin collapse issue on the navbar and header */
-	margin-top: 100px;
+	background-position: center;
+	background-attachment: fixed;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	align-items: center;
 }
 .header-contents {
 	display: flex;
