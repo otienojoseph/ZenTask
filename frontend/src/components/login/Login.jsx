@@ -10,7 +10,7 @@ function Login({ setShowLogin }) {
 				<div className="login-popup-title">
 					<h2>{currentState}</h2>
 					<img
-						onClick={() => setShowLogin((prev) => !prev)}
+						onClick={() => setShowLogin(false)}
 						src={assets.cross_icon}
 						alt=""
 					/>

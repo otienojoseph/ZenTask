@@ -9,6 +9,10 @@ function Hero() {
 					Designed to enhance focus and productivity by employing the Pomodoro
 					Technique by breaking down tasks into manageable chunks and
 					incorporating scheduled breaks, you can effectively combat
+					This was designed to enhance focus and productivity by employing the
+					Pomodoro Technique. This involves working in focused amount of time
+					intervals, followed by breaks. By breaking down tasks into manageable
+					chunks and incorporating scheduled breaks, you can effectively combat
 					distractions, improve concentration, and track their progress towards
 					achieving specific goals.
 				</p>

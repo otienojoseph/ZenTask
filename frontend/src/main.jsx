@@ -7,16 +7,17 @@ import "./index.css";
 import ErrorPage from "./routes/Error.jsx";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <App />,
-		errorElement: <ErrorPage />,
-		children: [{}],
-	},
-]);
+    {
+        path: "/",
+        element: <App />,
+        errorElement: <ErrorPage />,
+        children: [{}]
+    },
+])
 
 createRoot(document.getElementById("root")).render(
+
 	<StrictMode>
-		<RouterProvider router={router} />
+        <RouterProvider router={router} />
 	</StrictMode>
 );
