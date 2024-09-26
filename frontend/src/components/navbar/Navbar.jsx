@@ -10,7 +10,7 @@ function Navbar({ setShowLogin }) {
 	return (
 		<div className="navbar" id="navbar">
 			{isHome && (
-				<div class="top">
+				<div className="top">
 					<a href="#navbar">Back To Top</a>
 				</div>
 			)}
