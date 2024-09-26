@@ -15,12 +15,12 @@ function Navbar({ setShowLogin }) {
 				</div>
 			)}
 
-			<a href="#home">
+			<a href="#header">
 				<img src={assets.logo} alt="" className="logo" />
 			</a>
 			<ul className="navbar-menu">
 				<a
-					href="#home"
+					href="#header"
 					onClick={() => setMenu("home")}
 					className={menu === "home" ? "active" : ""}
 				>

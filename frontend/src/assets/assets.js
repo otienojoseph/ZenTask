@@ -5,6 +5,7 @@ import linkedin_icon from './linkedin_icon.png'
 import facebook_icon from './facebook_icon.png'
 import x_icon from './x_icon.png'
 import search_icon from './search_icon.png'
+import cross_icon from './cross_icon.png'
 
 
 export const assets = {
@@ -14,5 +15,6 @@ export const assets = {
     linkedin_icon,
     facebook_icon,
     x_icon,
-    search_icon
+    search_icon,
+    cross_icon
 }
