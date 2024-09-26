@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Navbar from "./Components/Navbar/Navbar";
-import Footer from "./Components/Footer/Footer";
-import LoginPopup from "./Components/LoginPopup/LoginPopup";
-import AppDownload from "./Components/AppDownload/AppDownload";
+import Navbar from "./components/navbar/Navbar";
+import Footer from "./components/footer/Footer";
+import LoginPopup from "./components/login/Login";
+import AppDownload from "./components/download/Download";
 import { Outlet } from "react-router-dom";
-import Header from "./Components/Header/Header";
+import Hero from "./components/hero/Hero";
 
 function App() {
 	const [showLogin, setShowLogin] = useState(false);
@@ -13,7 +13,7 @@ function App() {
 			{showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
 			<div className="wrapper">
 				<Navbar setShowLogin={setShowLogin} />
-				<Header />
+				<Hero />
 				<AppDownload />
 				<Footer />
 				<Outlet />

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import "./Navbar.css";
 import { assets } from "../../assets/assets";
+import "./navbar.css";
 
 function Navbar({ setShowLogin }) {
 	const [menu, setMenu] = useState("home");
@@ -10,7 +10,7 @@ function Navbar({ setShowLogin }) {
 	return (
 		<div className="navbar" id="navbar">
 			{isHome && (
-				<div class="top">
+				<div className="top">
 					<a href="#navbar">Back To Top</a>
 				</div>
 			)}

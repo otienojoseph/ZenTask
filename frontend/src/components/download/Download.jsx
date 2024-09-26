@@ -1,9 +1,7 @@
-import React from "react";
-import "./AppDownload.css";
 import { assets } from "../../assets/assets";
-import { Image } from "@chakra-ui/react";
+import "./download.css";
 
-function AppDownload() {
+function Download() {
 	return (
 		<div>
 			<div className="app-download" id="app-download">
@@ -11,12 +9,12 @@ function AppDownload() {
 					For Better Experience Download <br /> ZenTask App
 				</p>
 				<div className="app-download-platform">
-					<Image src={assets.play_store} alt="" />
-					<Image src={assets.app_store} alt="" />
+					<img src={assets.play_store} alt="" />
+					<img src={assets.app_store} alt="" />
 				</div>
 			</div>
 		</div>
 	);
 }
 
-export default AppDownload;
+export default Download;

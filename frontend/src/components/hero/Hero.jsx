@@ -1,9 +1,9 @@
-import "./Header.css";
+import "./hero.css";
 
-function Header() {
+function Hero() {
 	return (
-		<div className="header">
-			<div className="header-contents">
+		<div className="hero">
+			<div className="hero-contents">
 				<h2>Enhance Productivity, Embrace Serenity...</h2>
 				<p>
 					Designed to enhance focus and productivity by employing the Pomodoro
@@ -18,4 +18,4 @@ function Header() {
 	);
 }
 
-export default Header;
+export default Hero;
