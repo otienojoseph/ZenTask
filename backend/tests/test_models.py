@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.models import Users, Tasks, Sessions, Moods, Goals
 from datetime import datetime, timedelta
-from app import db
+from app import 
 
 class TestDatabaseModels(unittest.TestCase):
 
@@ -78,3 +78,4 @@ class TestDatabaseModels(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
