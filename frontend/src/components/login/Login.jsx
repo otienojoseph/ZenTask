@@ -6,7 +6,7 @@ function Login({ setShowLogin }) {
 	const [currentState, setCurrentState] = useState("Login");
 	return (
 		<div className="login-popup">
-			<from className="login-popup-container">
+			<form className="login-popup-container">
 				<div className="login-popup-title">
 					<h2>{currentState}</h2>
 					<img
@@ -41,7 +41,7 @@ function Login({ setShowLogin }) {
 						<span onClick={() => setCurrentState("Login")}>Login here</span>
 					</p>
 				)}
-			</from>
+			</form>
 		</div>
 	);
 }

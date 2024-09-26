@@ -1,24 +1,23 @@
 import { useState } from "react";
 import Navbar from "./components/navbar/Navbar";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Home from "./home/Home";
+import { Outlet } from "react-router-dom";
 import Footer from "./components/footer/Footer";
 import Login from "./components/login/Login";
+import Download from "./components/download//Download";
+import Hero from "./components/hero/Hero";
 
 function App() {
 	const [showLogin, setShowLogin] = useState(false);
 	return (
 		<>
 			{showLogin ? <Login setShowLogin={setShowLogin} /> : <></>}
-			<div className="app">
+			<div className="wrapper">
 				<Navbar setShowLogin={setShowLogin} />
-				<BrowserRouter>
-					<Routes>
-						<Route path="/" element={<Home />} />
-					</Routes>
-				</BrowserRouter>
+				<Hero />
+				<Download />
+				<Footer />
+				<Outlet />
 			</div>
-			<Footer />
 		</>
 	);
 }
